@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A0B9054-9C40-4A53-8F9E-41C277BB7C8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B572C14-08E1-40C0-B1D5-755561B453C8}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FD.Generic.Xml", "src\FD.Generic.Xml\FD.Generic.Xml.xproj", "{C00EA52E-0C7D-4026-9564-FAF2B27F55DA}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FD.Generic.Xml.Test", "src\FD.Generic.Xml.Test\FD.Generic.Xml.Test.xproj", "{8A02FD91-D889-4641-B252-41DEED2455F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C00EA52E-0C7D-4026-9564-FAF2B27F55DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C00EA52E-0C7D-4026-9564-FAF2B27F55DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C00EA52E-0C7D-4026-9564-FAF2B27F55DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C00EA52E-0C7D-4026-9564-FAF2B27F55DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A02FD91-D889-4641-B252-41DEED2455F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A02FD91-D889-4641-B252-41DEED2455F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A02FD91-D889-4641-B252-41DEED2455F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A02FD91-D889-4641-B252-41DEED2455F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C00EA52E-0C7D-4026-9564-FAF2B27F55DA} = {7A0B9054-9C40-4A53-8F9E-41C277BB7C8B}
+		{8A02FD91-D889-4641-B252-41DEED2455F5} = {7A0B9054-9C40-4A53-8F9E-41C277BB7C8B}
+	EndGlobalSection
+EndGlobal
