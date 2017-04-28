@@ -1,7 +1,7 @@
 # FDGenericXml
 .net core xml serializer
 
-How to use the library?(details for http://www.cnblogs.com/dralee/p/6705398.html)
+### How to use the library?(details for http://www.cnblogs.com/dralee/p/6705398.html)
 
     XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
     var xml1 = xs.ToXml(p1);
