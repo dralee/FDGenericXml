@@ -18,13 +18,16 @@ namespace FD.Generic.Xml.Regexs
         /// <param name="tagName">标签</param>  
         /// <param name="attrib">属性名</param>  
         /// <returns>属性</returns>  
-        public static string GetTagContent(string content, string tagName, string attrib)
+        public static string GetTagContent(string content, string tagName, string attrib, bool needCData)
         {
-            string tmpStr = string.IsNullOrEmpty(attrib) ? $"<{tagName}>([\\s\\S]*?)</{tagName}>" :
-                $"<{tagName}\\s*{attrib}\\s*=\\s*.*?>([\\s\\S]*?)</{tagName}>";
+            string valueStr = needCData ? "<!\\[CDATA\\[(.*)\\]\\]>" : "([\\s\\S]*?)";
+            string tmpStr = string.IsNullOrEmpty(attrib) ? $"<{tagName}>{valueStr}</{tagName}>" :
+                $"<{tagName}\\s*{attrib}\\s*=\\s*.*?>{valueStr}</{tagName}>";
             Match match = Regex.Match(content, tmpStr, RegexOptions.IgnoreCase);
 
             string result = match.Groups[1].Value;
+            //Match math = Regex.Match(result, @"\<\!\[CDATA\[(?<([\s\S]*?)>[^\]]*)\]\]\>", RegexOptions.IgnoreCase);
+            
             return result;
         }
 
@@ -35,10 +38,11 @@ namespace FD.Generic.Xml.Regexs
         /// <param name="tagName">标签</param>  
         /// <param name="attrib">属性名</param>  
         /// <returns>属性</returns>  
-        public static List<string> GetTagContents(string content, string tagName, string attrib)
+        public static List<string> GetTagContents(string content, string tagName, string attrib, bool needCData)
         {
-            string tmpStr = string.IsNullOrEmpty(attrib) ? $"<{tagName}>([\\s\\S]*?)</{tagName}>" :
-                $"<{tagName}\\s*{attrib}\\s*=\\s*.*?>([\\s\\S]*?)</{tagName}>";
+            string valueStr = needCData ? "<!\\[CDATA\\[(.*)\\]\\]>" : "([\\s\\S]*?)";
+            string tmpStr = string.IsNullOrEmpty(attrib) ? $"<{tagName}>{valueStr}</{tagName}>" :
+                $"<{tagName}\\s*{attrib}\\s*=\\s*.*?>{valueStr}</{tagName}>";
             MatchCollection matchs = Regex.Matches(content, tmpStr, RegexOptions.IgnoreCase);
 
             var result = new List<string>();

@@ -32,11 +32,13 @@ namespace FD.Generic.Xml.Test
                 Address = new Address { Province = "广东", City = "深圳", Detail = "yy区yy街道yyyy号" }
             };
 
-            XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
+            XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",true);
             var xml1 = xs.ToXml(p1);
             OutPrint("对象序列化", xml1);
             var xml2 = xs.ToXml(p2);
             OutPrint("xml反序列化", xml2);
+
+            var pp = xs.FromXml(xml1);
 
             Console.WriteLine("\r\n============= 数组对象 ===============");
 

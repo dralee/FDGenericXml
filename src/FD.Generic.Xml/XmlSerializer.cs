@@ -23,15 +23,18 @@ namespace FD.Generic.Xml
         private string _rootTag;
         private ElementType _elemType;
         private Type _elementType;
+        private bool _needCData;
 
         /// <summary>
         /// Xml序列及反序列化操作
         /// </summary>
         /// <param name="xmlHead">XML文件头<?xml ... ?></param>
+        /// <param name="needCDataFormat">是否需要CDATA包裹数据</param>
         /// <param name="rootTag">根标签名称</param>
-        public XmlSerializer(string xmlHead)
+        public XmlSerializer(string xmlHead, bool needCDataFormat = false)
         {
             _xmlHead = xmlHead;
+            _needCData = needCDataFormat;
             if (typeof(T).GetTypeInfo().IsGenericType)
             {
                 _elemType = ElementType.Generic;
@@ -154,15 +157,22 @@ namespace FD.Generic.Xml
                     }
                     else
                     {
-                        sb.Append(field.GetValue(obj));
+                        sb.Append(GetFormatValue(field.GetValue(obj)));
                     }
                 }
                 else
                 {
-                    sb.Append(field.GetValue(obj));
+                    sb.Append(GetFormatValue(field.GetValue(obj)));
                 }
                 sb.AppendFormat("</{0}>", field.Name.FirstToLower());
             }
+        }
+
+        private string GetFormatValue(object obj)
+        {
+            if (_needCData)
+                return $"<![CDATA[{obj}]]>";
+            return obj.ToString();
         }
         #endregion
 
@@ -205,7 +215,7 @@ namespace FD.Generic.Xml
         private T VisitXmlGeneric(string xml)
         {
             T collection = Activator.CreateInstance<T>();
-            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "");
+            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCData);
             foreach (var itemXml in xmlArr)
             {
                 AddElement(collection, itemXml, obj =>
@@ -223,7 +233,7 @@ namespace FD.Generic.Xml
         /// <returns></returns>
         private T VisitXmlArray(string xml)
         {
-            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "");
+            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCData);
             Array array = Array.CreateInstance(_elementType, xmlArr.Count);
             T collection = (T)Convert.ChangeType(array, typeof(T));
             int index = 0;
@@ -327,12 +337,12 @@ namespace FD.Generic.Xml
                     }
                     else
                     {
-                        field.SetValue(subObj, XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), ""));
+                        field.SetValue(subObj, XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData));
                     }
                 }
                 else
                 {
-                    var value = XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "");
+                    var value = XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData);
                     if (subType != typeof(string))
                     {
                         if (IsEnumType(subType))
