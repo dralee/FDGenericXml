@@ -3,11 +3,13 @@
 
 ### How to use the library?(details for http://www.cnblogs.com/dralee/p/6705398.html)
 
-    XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
+    XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",true);
     var xml1 = xs.ToXml(p1);
     OutPrint("对象序列化", xml1);
     var xml2 = xs.ToXml(p2);
     OutPrint("xml反序列化", xml2);
+
+    var pp = xs.FromXml(xml1);
 
     Console.WriteLine("\r\n============= 数组对象 ===============");
 
