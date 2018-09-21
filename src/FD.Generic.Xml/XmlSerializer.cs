@@ -325,6 +325,7 @@ namespace FD.Generic.Xml
         {
             foreach (var field in fields)
             {
+                string subXml = XmlTagHelper.GetSubXmlContent(xml, field.Name.FirstToLower(), "");
                 Type subType = field.PropertyType;
                 if (!subType.FullName.StartsWith("System.") && !IsEnumType(subType))
                 {
@@ -333,16 +334,16 @@ namespace FD.Generic.Xml
                     field.SetValue(obj, subObj);
                     if (subFields.Count() > 0)
                     {
-                        VisitXml(xml, subObj, subFields);
+                        VisitXml(subXml, subObj, subFields);
                     }
                     else
                     {
-                        field.SetValue(subObj, XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData));
+                        field.SetValue(subObj, XmlTagHelper.GetTagContent(subXml, field.Name.FirstToLower(), "", _needCData));
                     }
                 }
                 else
                 {
-                    var value = XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData);
+                    var value = XmlTagHelper.GetTagContent(subXml, field.Name.FirstToLower(), "", _needCData);
                     if (subType != typeof(string))
                     {
                         if (IsEnumType(subType))
