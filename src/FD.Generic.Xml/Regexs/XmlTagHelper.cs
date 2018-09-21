@@ -12,6 +12,25 @@ namespace FD.Generic.Xml.Regexs
     public class XmlTagHelper
     {
         /// <summary>  
+        /// 获取字符中指定标签的子串  
+        /// </summary>  
+        /// <param name="content">字符串</param>  
+        /// <param name="tagName">标签</param>  
+        /// <returns>标签xml字符串</returns>  
+        public static string GetSubXmlContent(string content, string tagName, string attrib)
+        {
+            string valueStr = "([\\s\\S]*?)";
+            string tmpStr = string.IsNullOrEmpty(attrib) ? $"<{tagName}>{valueStr}</{tagName}>" :
+                $"<{tagName}\\s*{attrib}\\s*=\\s*.*?>{valueStr}</{tagName}>";
+            Match match = Regex.Match(content, tmpStr, RegexOptions.IgnoreCase);
+
+            string result = match == null ? "" : match.Groups[0].Value;
+            //Match math = Regex.Match(result, @"\<\!\[CDATA\[(?<([\s\S]*?)>[^\]]*)\]\]\>", RegexOptions.IgnoreCase);
+
+            return result;
+        }
+
+        /// <summary>  
         /// 获取字符中指定标签的值  
         /// </summary>  
         /// <param name="content">字符串</param>  
