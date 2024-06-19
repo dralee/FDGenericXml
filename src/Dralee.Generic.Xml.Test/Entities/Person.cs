@@ -1,4 +1,4 @@
-﻿namespace FD.Generic.Xml.Test.Entities
+﻿namespace Dralee.Generic.Xml.Test.Entities
 {
     // CreatedBy: Jackie Lee（天宇遊龍）
     // CreatedOn: 2017-04-13

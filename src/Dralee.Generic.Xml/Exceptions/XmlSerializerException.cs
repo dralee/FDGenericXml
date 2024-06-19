@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FD.Generic.Xml.Exceptions
+namespace Dralee.Generic.Xml.Exceptions
 {
     // CreatedBy: Jackie Lee（天宇遊龍）
     // CreatedOn: 2017-04-13

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace FD.Generic.Xml.Regexs
+namespace Dralee.Generic.Xml.Regexs
 {
     // CreatedBy: Jackie Lee（天宇遊龍）
     // CreatedOn: 2017-04-13

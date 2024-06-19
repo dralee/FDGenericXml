@@ -1,4 +1,4 @@
-﻿namespace FD.Generic.Xml.Extensions
+﻿namespace Dralee.Generic.Xml.Extensions
 {
     // CreatedBy: Jackie Lee（天宇遊龍）
     // CreatedOn: 2017-04-13
