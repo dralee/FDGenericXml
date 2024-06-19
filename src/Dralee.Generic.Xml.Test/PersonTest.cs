@@ -32,7 +32,7 @@ namespace Dralee.Generic.Xml.Test
                 Address = new Address { Province = "广东", City = "深圳", Detail = "yy区yy街道yyyy号" }
             };
 
-            XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",true);
+            XmlSerializer<Person> xs = new XmlSerializer<Person>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", true);
             var xml1 = xs.ToXml(p1);
             OutPrint("对象序列化", xml1);
             var xml2 = xs.ToXml(p2);
@@ -70,33 +70,37 @@ namespace Dralee.Generic.Xml.Test
 
         public void Test2()
         {
-var suite = new Suite
-{
-    SuiteId = "ww213412348923",
-    AuthCode = "AUTHCODE",
-    InfoType = "create_auth",
-    TimeStamp = 1603610513,
-    State = "123458",
-    ExtraInfo = "h"
-};
-Console.WriteLine("\n========================================== suite ===================");
-var xs = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",CDataFormatFor.String);
-var xml1 = xs.ToXml(suite);
-OutPrint("对象序列化 string", xml1);
-var suite1 = xs.FromXml(xml1);
-OutPrint("xml反序列化 string", suite1.ToString());
+            var suite = new Suite
+            {
+                SuiteId = "ww213412348923",
+                AuthCode = "AUTHCODE",
+                InfoType = "create_auth",
+                TimeStamp = 1603610513,
+                State = "123458",
+                ExtraInfo = "h"
+            };
+            Console.WriteLine("\n========================================== suite ===================");
+            var xs = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", CDataFormatFor.String);
+            var xml1 = xs.ToXml(suite);
+            OutPrint("对象序列化 string", xml1);
+            var suite1 = xs.FromXml(xml1);
+            OutPrint("xml反序列化 string", suite1.ToString());
 
-var xs2 = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",CDataFormatFor.None);
-var xml2 = xs2.ToXml(suite);
-OutPrint("对象序列化 none", xml2);
-var suite2 = xs2.FromXml(xml2);
-OutPrint("xml反序列化 none", suite2.ToString());
+            var xs2 = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", CDataFormatFor.None);
+            var xml2 = xs2.ToXml(suite);
+            OutPrint("对象序列化 none", xml2);
+            var suite2 = xs2.FromXml(xml2);
+            OutPrint("xml反序列化 none", suite2.ToString());
 
-var xs3 = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>",CDataFormatFor.All);
-var xml3 = xs3.ToXml(suite);
-OutPrint("对象序列化 all", xml3);
-var suite3 = xs3.FromXml(xml3);
-OutPrint("xml反序列化 all", suite3.ToString());
+            var xs3 = new XmlSerializer<Suite>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", CDataFormatFor.All);
+            var xml3 = xs3.ToXml(suite);
+            OutPrint("对象序列化 all", xml3);
+            var suite3 = xs3.FromXml(xml3);
+            OutPrint("xml反序列化 all", suite3.ToString());
+
+            var xs4 = new XmlSerializer<Event>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", CDataFormatFor.All, CompatibleLevel.Compatible);
+            var e = xs4.FromXml(xml3);
+            OutPrint("xml反序列化 all, suit for event", e.ToString());
         }
 
         private void OutPrint(string tip, string msg)

@@ -33,9 +33,13 @@ var xml3 = xs3.ToXml(suite);
 OutPrint("对象序列化 all", xml3);
 var suite3 = xs3.FromXml(xml3);
 OutPrint("xml反序列化 all", suite3.ToString());
+
+var xs4 = new XmlSerializer<Event>("<?xml version=\"1.0\" encoding=\"utf-8\"?>", CDataFormatFor.All, CompatibleLevel.Compatible);
+var e = xs4.FromXml(xml3);
+OutPrint("xml反序列化 all, suit for event", e.ToString());
 ```
 
 ### nuget 使用方式
 ```bash
-dotnet add package Dralee.Generic.Xml --version 1.0.3
+dotnet add package Dralee.Generic.Xml --version 1.0.4
 ```

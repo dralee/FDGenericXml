@@ -19,11 +19,12 @@ namespace Dralee.Generic.Xml
     /// </summary>
     public class XmlSerializer<T>
     {
-        private string _xmlHead;
-        private string _rootTag;
-        private ElementType _elemType;
-        private Type _elementType;
-        private CDataFormatFor _needCDataFormatFor;
+        private readonly string _xmlHead;
+        private readonly string _rootTag;
+        private readonly ElementType _elemType;
+        private readonly Type _elementType;
+        private readonly CDataFormatFor _needCDataFormatFor;
+        private readonly CompatibleLevel _compatibleLevel;
 
         /// <summary>
         /// Xml序列及反序列化操作
@@ -42,10 +43,12 @@ namespace Dralee.Generic.Xml
         /// <param name="xmlHead">XML文件头<?xml ... ?></param>
         /// <param name="cDataFormatFor">是否需要CDATA包裹数据</param>
         /// <param name="rootTag">根标签名称</param>
-        public XmlSerializer(string xmlHead, CDataFormatFor cDataFormatFor)
+        /// <param name="compatibleLevel">兼容性</param>
+        public XmlSerializer(string xmlHead, CDataFormatFor cDataFormatFor, CompatibleLevel compatibleLevel = CompatibleLevel.Strict)
         {
             _xmlHead = xmlHead;
             _needCDataFormatFor = cDataFormatFor;
+            _compatibleLevel = compatibleLevel;
             if (typeof(T).GetTypeInfo().IsGenericType)
             {
                 _elemType = ElementType.Generic;
@@ -301,7 +304,7 @@ namespace Dralee.Generic.Xml
         /// <returns></returns>
         private T VisitXmlObject(string xml)
         {
-            if (string.IsNullOrEmpty(xml) || !xml.StartsWith($"<{_rootTag}>"))
+            if (string.IsNullOrEmpty(xml) || (_compatibleLevel == CompatibleLevel.Strict && !xml.StartsWith($"<{_rootTag}>")))
             {
                 throw new XmlSerializerException($"反序列化对象信息异常:指定xml内容与指定对象类型{typeof(T)}不匹配");
             }
