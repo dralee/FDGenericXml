@@ -1,6 +1,6 @@
-﻿using FD.Generic.Xml.Exceptions;
-using FD.Generic.Xml.Extensions;
-using FD.Generic.Xml.Regexs;
+﻿using Dralee.Generic.Xml.Exceptions;
+using Dralee.Generic.Xml.Extensions;
+using Dralee.Generic.Xml.Regexs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace FD.Generic.Xml
+namespace Dralee.Generic.Xml
 {
     // CreatedBy: Jackie Lee（天宇遊龍）
     // CreatedOn: 2017-04-13
@@ -23,7 +23,7 @@ namespace FD.Generic.Xml
         private string _rootTag;
         private ElementType _elemType;
         private Type _elementType;
-        private bool _needCData;
+        private CDataFormatFor _needCDataFormatFor;
 
         /// <summary>
         /// Xml序列及反序列化操作
@@ -31,10 +31,21 @@ namespace FD.Generic.Xml
         /// <param name="xmlHead">XML文件头<?xml ... ?></param>
         /// <param name="needCDataFormat">是否需要CDATA包裹数据</param>
         /// <param name="rootTag">根标签名称</param>
-        public XmlSerializer(string xmlHead, bool needCDataFormat = false)
+        public XmlSerializer(string xmlHead, bool needCDataFormat = false) :
+            this(xmlHead, needCDataFormat ? CDataFormatFor.All : CDataFormatFor.None)
+        {
+        }
+
+        /// <summary>
+        /// Xml序列及反序列化操作
+        /// </summary>
+        /// <param name="xmlHead">XML文件头<?xml ... ?></param>
+        /// <param name="cDataFormatFor">是否需要CDATA包裹数据</param>
+        /// <param name="rootTag">根标签名称</param>
+        public XmlSerializer(string xmlHead, CDataFormatFor cDataFormatFor)
         {
             _xmlHead = xmlHead;
-            _needCData = needCDataFormat;
+            _needCDataFormatFor = cDataFormatFor;
             if (typeof(T).GetTypeInfo().IsGenericType)
             {
                 _elemType = ElementType.Generic;
@@ -54,6 +65,7 @@ namespace FD.Generic.Xml
         }
 
         #region 对象转xml
+
         /// <summary>
         /// 序列化报文为xml
         /// </summary>
@@ -66,6 +78,7 @@ namespace FD.Generic.Xml
             {
                 sb.AppendFormat("{0}\r\n", _xmlHead);
             }
+
             try
             {
                 Visit(sb, packet);
@@ -74,6 +87,7 @@ namespace FD.Generic.Xml
             {
                 throw new XmlSerializerException($"序列化对象异常:{ex.Message}", ex);
             }
+
             return sb.ToString();
         }
 
@@ -164,19 +178,35 @@ namespace FD.Generic.Xml
                 {
                     sb.Append(GetFormatValue(field.GetValue(obj)));
                 }
+
                 sb.AppendFormat("</{0}>", field.Name.FirstToLower());
             }
         }
 
         private string GetFormatValue(object obj)
         {
-            if (_needCData)
-                return $"<![CDATA[{obj}]]>";
-            return obj.ToString();
+            switch (_needCDataFormatFor)
+            {
+                case CDataFormatFor.All:
+                    return $"<![CDATA[{obj}]]>";
+                case CDataFormatFor.String:
+                    var isNeed = obj?.GetType() == typeof(string);
+                    if (isNeed)
+                    {
+                        return $"<![CDATA[{obj}]]>";
+                    }
+
+                    return obj?.ToString();
+                case CDataFormatFor.None:
+                default:
+                    return obj?.ToString();
+            }
         }
+
         #endregion
 
         #region xml转对象
+
         /// <summary>
         /// 序列化为报文内容
         /// </summary>
@@ -189,6 +219,7 @@ namespace FD.Generic.Xml
             {
                 xml = xml.Substring(index + 2).Trim('\r', '\n', ' ');
             }
+
             try
             {
                 switch (_elemType)
@@ -215,7 +246,7 @@ namespace FD.Generic.Xml
         private T VisitXmlGeneric(string xml)
         {
             T collection = Activator.CreateInstance<T>();
-            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCData);
+            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCDataFormatFor == CDataFormatFor.All);
             foreach (var itemXml in xmlArr)
             {
                 AddElement(collection, itemXml, obj =>
@@ -223,6 +254,7 @@ namespace FD.Generic.Xml
                     Add(collection, obj);
                 });
             }
+
             return collection;
         }
 
@@ -233,7 +265,7 @@ namespace FD.Generic.Xml
         /// <returns></returns>
         private T VisitXmlArray(string xml)
         {
-            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCData);
+            List<string> xmlArr = XmlTagHelper.GetTagContents(xml, _rootTag, "", _needCDataFormatFor == CDataFormatFor.All);
             Array array = Array.CreateInstance(_elementType, xmlArr.Count);
             T collection = (T)Convert.ChangeType(array, typeof(T));
             int index = 0;
@@ -244,6 +276,7 @@ namespace FD.Generic.Xml
                     SetValue(collection, obj, index++);
                 });
             }
+
             return collection;
         }
 
@@ -256,7 +289,8 @@ namespace FD.Generic.Xml
         private void AddElement(T collection, string itemXml, Action<object> addItem)
         {
             var obj = Activator.CreateInstance(_elementType);
-            VisitXml($"<{_rootTag}>{itemXml}</{_rootTag}>", obj, _elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public));
+            VisitXml($"<{_rootTag}>{itemXml}</{_rootTag}>", obj,
+                _elementType.GetProperties(BindingFlags.Instance | BindingFlags.Public));
             addItem(obj);
         }
 
@@ -271,6 +305,7 @@ namespace FD.Generic.Xml
             {
                 throw new XmlSerializerException($"反序列化对象信息异常:指定xml内容与指定对象类型{typeof(T)}不匹配");
             }
+
             T packet = Activator.CreateInstance<T>();
             VisitXml(xml, packet, typeof(T).GetProperties());
             return packet;
@@ -283,11 +318,13 @@ namespace FD.Generic.Xml
         /// <param name="obj"></param>
         private void Add(T collection, object obj)
         {
-            var methodInfo = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(m => m.Name.Equals("Add"));
+            var methodInfo = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .FirstOrDefault(m => m.Name.Equals("Add"));
             if (methodInfo == null)
             {
                 throw new XmlSerializerException($"反序列化集合xml内容失败，目标{typeof(T).FullName}非集合类型");
             }
+
             var instance = Expression.Constant(collection);
             var param = Expression.Constant(obj);
             var addExpression = Expression.Call(instance, methodInfo, param);
@@ -302,11 +339,13 @@ namespace FD.Generic.Xml
         /// <param name="obj"></param>
         private void SetValue(T collection, object obj, int index)
         {
-            var methodInfo = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(m => m.Name.Equals("SetValue"));
+            var methodInfo = typeof(T).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .FirstOrDefault(m => m.Name.Equals("SetValue"));
             if (methodInfo == null)
             {
                 throw new XmlSerializerException($"反序列化集合xml内容失败，目标{typeof(T).FullName}非集合类型");
             }
+
             var instance = Expression.Constant(collection);
             var param1 = Expression.Constant(obj);
             var param2 = Expression.Constant(index);
@@ -328,7 +367,7 @@ namespace FD.Generic.Xml
                 Type subType = field.PropertyType;
                 if (!subType.FullName.StartsWith("System.") && !IsEnumType(subType))
                 {
-                    object subObj = Activator.CreateInstance(subType);// field.GetValue(obj);
+                    object subObj = Activator.CreateInstance(subType); // field.GetValue(obj);
                     var subFields = subType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
                     field.SetValue(obj, subObj);
                     if (subFields.Count() > 0)
@@ -337,12 +376,13 @@ namespace FD.Generic.Xml
                     }
                     else
                     {
-                        field.SetValue(subObj, XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData));
+                        field.SetValue(subObj,
+                            XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", NeedCdataFormat(field.PropertyType)));
                     }
                 }
                 else
                 {
-                    var value = XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", _needCData);
+                    var value = XmlTagHelper.GetTagContent(xml, field.Name.FirstToLower(), "", NeedCdataFormat(field.PropertyType));
                     if (subType != typeof(string))
                     {
                         if (IsEnumType(subType))
@@ -361,9 +401,22 @@ namespace FD.Generic.Xml
                 }
             }
         }
+
         #endregion
 
         #region 帮助项
+
+        /// <summary>
+        /// 是否需要cdata格式
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private bool NeedCdataFormat(Type type)
+        {
+            return _needCDataFormatFor == CDataFormatFor.All ||
+                   (_needCDataFormatFor == CDataFormatFor.String && type == typeof(string));
+        }
+
         /// <summary>
         /// 是否为枚举类型
         /// </summary>
@@ -379,8 +432,11 @@ namespace FD.Generic.Xml
         /// </summary>
         private enum ElementType
         {
-            Object, Array, Generic
+            Object,
+            Array,
+            Generic
         }
+
         #endregion
     }
 }

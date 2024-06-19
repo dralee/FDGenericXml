@@ -37,3 +37,8 @@
     {
         OutPrint("泛型集合对象", p.ToString());
     });
+
+### nuget
+```bash
+dotnet add package Dralee.Generic.Xml --version 1.0.0
+```

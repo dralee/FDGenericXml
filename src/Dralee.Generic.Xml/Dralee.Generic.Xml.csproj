@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Dralee.Generic.Xml</AssemblyName>
+    <PackageId>Dralee.Generic.Xml</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <TargetFrameworks>netstandard1.6;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <Authors>dralee</Authors>
+    <Description>xml generic operation</Description>
+    <Copyright>dralee</Copyright>
+    <PackageProjectUrl>https://github.com/dralee/FDGenericXml</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dralee/FDGenericXml/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/dralee/FDGenericXml</RepositoryUrl>
+    <RootNamespace>Dralee.Generic.Xml</RootNamespace>
+    <Product>Dralee.Generic.Xml</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
