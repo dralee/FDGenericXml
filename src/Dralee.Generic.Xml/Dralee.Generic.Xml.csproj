@@ -15,10 +15,19 @@
     <RepositoryUrl>https://github.com/dralee/FDGenericXml</RepositoryUrl>
     <RootNamespace>Dralee.Generic.Xml</RootNamespace>
     <Product>Dralee.Generic.Xml</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.2</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="">
+      <Link>README.md</Link>
+    </None>
   </ItemGroup>
 
 </Project>
