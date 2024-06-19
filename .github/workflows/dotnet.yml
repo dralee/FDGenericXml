@@ -21,6 +21,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: src
-      run: cd src/Dralee.Generic.Xml
+      run: cd src/Dralee.Generic.Xml && pwd && sh build.sh
     - name: Build
-      run: ./build.sh
+      run: echo ./build.sh
