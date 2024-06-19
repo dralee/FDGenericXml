@@ -103,6 +103,15 @@ namespace Dralee.Generic.Xml.Test
             OutPrint("xml反序列化 all, suit for event", e.ToString());
         }
 
+        public void Test3()
+        {
+            var content =
+                "<xml><SuiteId><![CDATA[ww4asffe99e54c0fxxxx]]></SuiteId><InfoType><![CDATA[suite_ticket]]></InfoType><TimeStamp>1403610513</TimeStamp><SuiteTicket><![CDATA[asdfasfdasdfasdf]]></SuiteTicket></xml>";
+            var s = new XmlSerializer<Event>("", CDataFormatFor.String, CompatibleLevel.Compatible);
+            var e =  s.FromXml(content);
+            OutPrint("xml suite string for event", e.ToString());
+        }
+
         private void OutPrint(string tip, string msg)
         {
             Console.WriteLine("======>{0}：", tip);

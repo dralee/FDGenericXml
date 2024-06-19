@@ -12,6 +12,7 @@ namespace Dralee.Generic.Xml.Test
             pt.Test();
             
             pt.Test2();
+            pt.Test3();
 
             Console.Read();
         }
