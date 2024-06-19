@@ -37,5 +37,5 @@ OutPrint("xml反序列化 all", suite3.ToString());
 
 ### nuget 使用方式
 ```bash
-dotnet add package Dralee.Generic.Xml --version 1.0.0
+dotnet add package Dralee.Generic.Xml --version 1.0.3
 ```
